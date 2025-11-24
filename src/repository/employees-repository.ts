@@ -1,7 +1,7 @@
-import { WorkdayModel } from "models/employees-model";
+import { WorkdayModel } from "../models/employees-model";
 import db from "../db/db";
 
-export async function getWDRepository(
+export async function getWDRepo(
   page: number,
   limit: number,
   orderby: string
@@ -14,7 +14,7 @@ export async function getWDRepository(
     .limit(limit);
 }
 
-export async function getConcurRepository(page: number, limit: number, orderby: string) {
+export async function getConcurRepo(page: number, limit: number, orderby: string) {
   const offset = (page - 1) * limit;
   return await db("app.ConcurTravel")
     .select("*")

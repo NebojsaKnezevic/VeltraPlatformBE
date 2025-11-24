@@ -1,8 +1,11 @@
-import { getConcur, getWorkday } from '../controllers/employees-controller';
-import express, { Router } from 'express';
+
+import { asyncHandler } from '../helpers/async-handler';
+import { getConcurController, getWorkdayController } from '../controllers/employees-controller';
+import { Router } from 'express';
+
 
 
 export default function workdayRouter(router: Router){
-    router.get("/workday", getWorkday);
-    router.get("/concur", getConcur);
+    router.get("/workday", asyncHandler(getWorkdayController));
+    router.get("/concur", asyncHandler(getConcurController));
 }
