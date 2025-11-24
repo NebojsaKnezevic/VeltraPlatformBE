@@ -1,10 +1,10 @@
 import { Request, Response } from "express";
 import { getConcurService, getWDService } from "../services/employees-service";
 
-export async function getWorkday(req:Request, res:Response){
+export async function getWorkdayController(req:Request, res:Response){
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
-    const orderby = String(req.query.orderby) || "geid";
+    const orderby = (req.query.orderby as string) || "GEID";
       try {
         const data = await getWDService(page,limit,orderby);
         return res.status(200).json(data);
@@ -14,10 +14,10 @@ export async function getWorkday(req:Request, res:Response){
     }
 }
 
-export async function getConcur(req:Request, res:Response){
+export async function getConcurController(req:Request, res:Response){
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.limit) || 20;
-      const orderby = String(req.query.orderby) || "geid";
+    const orderby = (req.query.orderby as string) || "GEID";
     try {
         const data = await getConcurService(page, limit, orderby);
         return res.status(200).json(data);

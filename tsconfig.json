@@ -7,6 +7,7 @@
         "outDir": "dist",
         "sourceMap": true,
         "noImplicitAny": true,
+        "strict": true,
         "paths": {
       "db/*": ["db/*"]
     },

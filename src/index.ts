@@ -5,6 +5,7 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import compression from "compression";
 import { myRouter } from "./routes/index";
+import { errorHandler } from "./middleware/error-handler";
 
 const app = express();
 
@@ -13,7 +14,7 @@ app.use(compression());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use("/", myRouter);
-
+app.use(errorHandler);
 // app.get("/", async (req: Request, res: Response) => {
 //   const result = await GetWD();
 //   res.json(result);
