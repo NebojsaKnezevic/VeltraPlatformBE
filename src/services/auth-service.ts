@@ -1,29 +1,30 @@
-import { loginRepo, registerRepo } from "../repository/auth-repository";
+import { loginRepo, registerRepo, userRoles } from "../repository/auth-repository";
 import { CreateUserDto } from "../dtos/create-user";
 import { hashPassword, verifyPassword } from "../helpers/auth";
 import { CustomError, InvalidCredentialsError, NotFoundError, ValidationError } from "../errors/errors";
 import { UserModel } from "models/user-model";
+import jwt from 'jsonwebtoken';
 
 export async function registerService(user: CreateUserDto): Promise<UserModel> {
   user.password = await hashPassword(user.password);
   const result = await registerRepo(user);
-  if(!result) throw new NotFoundError("User creation failed")
+  if (!result) throw new NotFoundError("User creation failed")
   return result;
 }
 
 
-export async function loginService(email: string, password: string): Promise<UserModel> {
-  const user:UserModel | undefined = await loginRepo(email);
+export async function loginService(email: string, password: string): Promise<[UserModel, string]> {
+  const user: UserModel | undefined = await loginRepo(email);
 
-  if(!user){
+  if (!user) {
     throw new InvalidCredentialsError("Invalid email or password");
   }
 
-  if(!await verifyPassword(password, user.password)){
+  if (!await verifyPassword(password, user.password)) {
     throw new InvalidCredentialsError("Invalid email or password");
   }
 
-  if(!user.emailVerifiedAt){
+  if (!user.emailVerifiedAt) {
     throw new CustomError("User not verified.", 401);
   }
 
@@ -45,10 +46,18 @@ export async function loginService(email: string, password: string): Promise<Use
   //   throw new CustomError(message, 403);
   // }
 
-  if(!user.isActive){
+  if (!user.isActive) {
     throw new CustomError("User is inactive", 401);
   }
 
-  //OVde JWT malo kasnije...
-  return user;
+
+  const roles = await userRoles(user.id);
+  if (!roles) throw new ValidationError("failed to fetch roles from db.")
+  user.roles = roles.map(x => x.role as string)
+
+  const secret = process.env.JWT_SECRET;
+  if (!secret) throw new CustomError("JWT secret key is missing from .env");
+  const token = jwt.sign(user, secret, { expiresIn: '1m' });
+
+  return [user, token];
 }

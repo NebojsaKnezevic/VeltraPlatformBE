@@ -6,6 +6,8 @@ import cors from "cors";
 import compression from "compression";
 import { myRouter } from "./routes/index";
 import { errorHandler } from "./middleware/error-handler";
+import { messageCollector } from "./middleware/message-collector";
+import { responseWrapper } from "./middleware/response-wrapper";
 
 const app = express();
 
@@ -13,6 +15,8 @@ app.use(cors({ credentials: true }));
 app.use(compression());
 app.use(bodyParser.json());
 app.use(cookieParser());
+app.use(messageCollector);
+app.use(responseWrapper);
 app.use("/", myRouter);
 app.use(errorHandler);
 // app.get("/", async (req: Request, res: Response) => {
