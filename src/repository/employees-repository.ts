@@ -1,5 +1,6 @@
 import { WorkdayModel } from "../models/employees-model";
 import db from "../db/db";
+import { CreateAuditLogDto } from "../dtos/audit";
 
 export async function getWDRepo(
   page: number,
@@ -22,3 +23,4 @@ export async function getConcurRepo(page: number, limit: number, orderby: string
     .offset(offset)
     .limit(limit);
 }
+

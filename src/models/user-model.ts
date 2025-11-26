@@ -3,8 +3,9 @@ export interface UserModel {
   email: string;
   password: string;
   name: string;
-  role: string;
+  // role: string;
   isActive: boolean;
   emailVerifiedAt: Date;
   createdAt: Date;
+  roles: string[];
 }
