@@ -1,7 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { logger } from "../helpers/logger";
-
-import { ZodTypeAny } from "zod/v3";
+import { ZodTypeAny } from "zod";
 import { ValidationError } from "../errors/errors";
 
 export function validateBody(schema: ZodTypeAny) {
