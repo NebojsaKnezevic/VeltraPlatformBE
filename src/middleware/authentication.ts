@@ -4,22 +4,25 @@ import jwt, { JwtPayload } from "jsonwebtoken";
 
 import { UserModel } from "../models/user-model";
 
-export async function jwtAuth(req: Request, res: Response, next: NextFunction) {
+export function jwtAuth(req: Request, res: Response, next: NextFunction) {
   const cookie = req.cookies.jsonTokenCustom;
   if (!cookie) throw new CustomError("Cookie is missing");
 
   const secret = process.env.JWT_SECRET;
   if (!secret) throw new CustomError("JWT secret key is missing from env");
 
-  const user = jwt.verify(cookie, secret) ;
+  const user = jwt.verify(cookie, secret);
 
   res.cookie("jsonTokenCustom", cookie, {
     httpOnly: true,
-    maxAge: 5 * 60 * 1000, 
+    maxAge: 5 * 60 * 1000,
+    sameSite: "lax", // za localhost
+    secure: false, // za localhost
   });
 
   req.user = user as UserModel;
-//   console.log('middleware, ', user)
+  //   console.log('middleware, ', user)
+
 
   next();
 }
@@ -34,4 +37,3 @@ export async function jwtAuth(req: Request, res: Response, next: NextFunction) {
 //     next();
 //   };
 // }
-

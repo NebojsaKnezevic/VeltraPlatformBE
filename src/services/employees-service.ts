@@ -1,20 +1,32 @@
-import { WorkdayModel } from "models/employees-model";
-import { getConcurRepo, getWDRepo } from "../repository/employees-repository";
+import {
+  getConcurRepo,
+  getHrgtDWRepo,
+  getHrgtRepo,
+} from "../repository/employees-repository";
+import { IHrgtModel } from "../models/hrgt-model";
+import { IFilter } from "../models/filter-model";
+import { IHRGTdwModel } from "../models/hrgtdw-model";
+import { IConcurModel } from "../models/concur-model";
 
-export async function getWDService(page: number, limit: number, orderby: string): Promise<WorkdayModel[]> {
-  try {
-    return await getWDRepo(page,limit, orderby);
-  } catch (error) {
-    console.error("Failed to fetch Workday from db:", error);
-    throw error;
-  }
+export async function getHRGTService(
+  page: number,
+  limit: number,
+  orderby: string,
+  filter: IFilter
+): Promise<IHrgtModel[]> {
+  return await getHrgtRepo(page, limit, orderby, filter);
 }
 
-export async function getConcurService(page: number, limit: number, orderby: string){
-  try {
-    return await getConcurRepo(page, limit, orderby);
-  } catch (error) {
-    console.error("Failed to fetch Concur from db:", error);
-    throw error;
-  }
+export async function getConcurService(
+  page: number,
+  limit: number,
+  orderby: string,
+  filter: IFilter
+): Promise<IConcurModel[]> {
+  return await getConcurRepo(page, limit, orderby, filter);
+}
+
+export async function getHrgtDwService(filter: IFilter): Promise<IHRGTdwModel[]> {
+  const result = await getHrgtDWRepo(filter);
+  return result;
 }
